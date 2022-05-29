@@ -1,5 +1,10 @@
 module Scapa
 
-# Write your package code here.
+using Random
+using Enzyme
+using ChainRulesCore
+
+include("utils.jl")
+include("dense.jl")
 
 end
