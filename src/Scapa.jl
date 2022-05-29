@@ -1,7 +1,7 @@
 module Scapa
 
 using Random
-using Enzyme
+using Zygote
 using ChainRulesCore
 
 include("utils.jl")

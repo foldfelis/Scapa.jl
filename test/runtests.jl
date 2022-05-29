@@ -2,7 +2,7 @@ using Scapa
 using Test
 
 using NNlib
-using Enzyme
+using Zygote
 using ChainRulesCore
 
 @testset "Scapa.jl" begin
