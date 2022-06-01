@@ -40,7 +40,7 @@ end
 
     g(x, y) = @. exp(-0.5 * (x^2 + y^2))
 
-    xs = randn(Float32, 2, 1000)
+    xs = randn(Float32, 2, 2000)
     ys = g(xs[1, :], xs[2, :])
 
     # #######################
@@ -61,7 +61,7 @@ end
     # ####################
 
     η₀ = 1f-2
-    for _ in 1:500
+    for _ in 1:1000
         # ### get gradient ###
         gs = gradient(ps) do
             loss(xs, ys)
