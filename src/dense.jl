@@ -16,16 +16,7 @@ function Dense(
     return Dense(w, b, σ)
 end
 
-nparams(l::Dense) = 2
-
 params(l::Dense) = l.weights, l.bias
-
-function update!(l::Dense, ps)
-    l.weights .= ps[1]
-    l.bias .= ps[2]
-
-    return params(l)
-end
 
 function Base.show(io::IO, l::Dense)
     print(io, "Dense(", size(l.weights, 2), " => ", size(l.weights, 1))

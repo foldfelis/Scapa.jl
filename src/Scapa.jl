@@ -1,7 +1,6 @@
 module Scapa
 
 using Random
-using Zygote
 using ChainRulesCore
 
 include("utils.jl")

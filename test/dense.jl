@@ -16,7 +16,7 @@ end
     end
 end
 
-@testset "Dense grad" begin
+@testset "multilayer perceptron" begin
     # #########
     # # utils #
     # #########
@@ -31,25 +31,25 @@ end
             end
         end
 
-        return model, ps
+        return model, Params(ps)
     end
 
     # ########
     # # data #
     # ########
 
-    g(x, y) = exp(-0.5 * (x^2 + y^2))
+    g(x, y) = @. exp(-0.5 * (x^2 + y^2))
 
     xs = randn(Float32, 2, 1000)
-    ys = g.(xs[1, :], xs[2, :])
+    ys = g(xs[1, :], xs[2, :])
 
     # #######################
     # # model and loss func #
     # #######################
 
     layers = [
-        Dense(2, 3, σ=NNlib.gelu),
-        Dense(3, 1, σ=NNlib.gelu),
+        Dense(2, 3, σ=NNlib.relu),
+        Dense(3, 1, σ=NNlib.relu),
     ]
 
     model, ps = get_model_and_params(layers)
@@ -63,22 +63,15 @@ end
     η₀ = 1f-2
     for _ in 1:500
         # ### get gradient ###
-
-        gs = gradient(Params(ps)) do
+        gs = gradient(ps) do
             loss(xs, ys)
         end
 
-        ps .-= gs .* η₀
-
         # ### update params ###
-
-        i = 1
-        for layer in layers
-            Scapa.update!(layer, ps[i:(i+Scapa.nparams(layer)-1)])
-            i += Scapa.nparams(layer)
+        for p in ps
+            isnothing(gs[p]) && continue
+            p .-= η₀ .* gs[p]
         end
-
-        model, ps = get_model_and_params(layers)
     end
 
     @test loss(xs, ys) < 1e-1

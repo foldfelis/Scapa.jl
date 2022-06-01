@@ -25,4 +25,3 @@ end
 ChainRulesCore.@non_differentiable glorot_uniform(::Any...)
 
 params(::Any) = ()
-update!(::Any) = ()
