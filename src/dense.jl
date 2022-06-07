@@ -16,6 +16,8 @@ function Dense(
     return Dense(w, b, σ)
 end
 
+params(l::Dense) = l.weights, l.bias
+
 function Base.show(io::IO, l::Dense)
     print(io, "Dense(", size(l.weights, 2), " => ", size(l.weights, 1))
     l.σ == identity || print(io, ", ", l.σ)
