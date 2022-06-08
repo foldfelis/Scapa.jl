@@ -1,3 +1,13 @@
+@testset "constructers" begin
+    @test Scapa.Array(CPU) == Base.Array
+    @test Scapa.rng(CPU) == Scapa.rng()
+
+    if CUDA.functional()
+        @test Scapa.Array(GPU) == CuArray
+        @test Scapa.rng(GPU) == CUDA.default_rng()
+    end
+end
+
 @testset "glorot uniform" begin
     @test typeof(glorot_uniform(CPU, Float64, 3, 3)) == Matrix{Float64}
 
