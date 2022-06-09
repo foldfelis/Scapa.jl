@@ -32,7 +32,7 @@ nfan(out_dim, in_dim) = out_dim, in_dim # dense kernels
 # nfan(dims...) = # convolution kernels
 
 function glorot_uniform(
-    device::Type{<:AbstractDevice}, T::Type{<:Real},
+    device::Type{<:AbstractDevice}, T::Type{<:Number},
     dims::Integer...;
     gain::Real=1
 )

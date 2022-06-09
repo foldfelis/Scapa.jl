@@ -9,11 +9,12 @@
 end
 
 @testset "glorot uniform" begin
-    @test typeof(glorot_uniform(CPU, Float64, 3, 3)) == Matrix{Float64}
+    for T in [Float32, Float64, ComplexF32, ComplexF64]
+        @test glorot_uniform(CPU, T, 3, 3) isa Matrix{T}
 
-    if CUDA.functional()
-        @test typeof(glorot_uniform(GPU, Float32, 3, 3)) ==
-            CuArray{Float32, 2, CUDA.Mem.DeviceBuffer}
+        if CUDA.functional()
+            @test glorot_uniform(GPU, T, 3, 3) isa CuArray{T, 2}
+        end
     end
 end
 
