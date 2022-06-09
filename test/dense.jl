@@ -1,13 +1,13 @@
 @testset "Dense" begin
     for T in [Float32, Float64, ComplexF32, ComplexF64]
-        dense = Dense(CPU, T, 2, 3, σ=NNlib.gelu)
+        dense = Dense(2, 3, σ=NNlib.gelu, T=T)
 
         @test size(dense(rand(T, 2))) == (3, )
         @test size(dense(rand(T, 2, 10))) == (3, 10)
         @test size(dense(rand(T, 2, 4, 5, 6, 10))) == (3, 4, 5, 6, 10)
 
         if CUDA.functional()
-            dense = Dense(GPU, T, 2, 3, σ=NNlib.gelu)
+            dense = Dense(2, 3, σ=NNlib.gelu, T=T, device=GPU)
 
             @test size(dense(cu(rand(T, 2)))) == (3, )
             @test size(dense(cu(rand(T, 2, 10)))) == (3, 10)
@@ -18,7 +18,7 @@ end
 
 @testset "Dense grad" begin
     for T in [Float32, Float64, ComplexF32, ComplexF64]
-        dense = Dense(CPU, T, 2, 3, σ=NNlib.gelu)
+        dense = Dense(2, 3, σ=NNlib.gelu, T=T)
 
         x = rand(T, 2)
 
@@ -27,7 +27,7 @@ end
         end
 
         if CUDA.functional()
-            dense = Dense(GPU, T, 2, 3, σ=NNlib.gelu)
+            dense = Dense(2, 3, σ=NNlib.gelu, T=T, device=GPU)
 
             x = cu(rand(T, 2))
 

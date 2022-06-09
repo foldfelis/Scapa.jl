@@ -7,22 +7,15 @@ struct Dense{F, W, B}
 end
 
 function Dense(
-    device::Type{<:AbstractDevice}, T::Type{<:Number},
     in_dim::Integer, out_dim::Integer;
-    bias::Bool=true, σ=identity, init=glorot_uniform
+    bias::Bool=true, σ=identity, init=glorot_uniform,
+    device::Type{<:AbstractDevice}=init_on(),
+    T::Type{<:Number}=Float32,
 )
     w = init(device, T, out_dim, in_dim)
     b = bias ? fill!(similar(w, out_dim), 0) : false
 
     return Dense(w, b, σ)
-end
-
-function Dense(T::Type{<:Number}, in_dim::Integer, out_dim::Integer; kwargs...)
-    return Dense(init_on(), T, in_dim, out_dim; kwargs...)
-end
-
-function Dense(in_dim::Integer, out_dim::Integer; kwargs...)
-    return Dense(init_on(), Float32, in_dim, out_dim; kwargs...)
 end
 
 params(l::Dense) = l.weights, l.bias
