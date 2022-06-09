@@ -7,10 +7,11 @@ struct Dense{F, W, B}
 end
 
 function Dense(
+    device::Type{<:AbstractDevice}, T::Type{<:Real},
     in_dim::Integer, out_dim::Integer;
     bias::Bool=true, σ=identity, init=glorot_uniform
 )
-    w = init(out_dim, in_dim)
+    w = init(device, T, out_dim, in_dim)
     b = bias ? fill!(similar(w, out_dim), 0) : false
 
     return Dense(w, b, σ)
