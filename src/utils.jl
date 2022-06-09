@@ -1,5 +1,6 @@
 export
     AbstractDevice, CPU, GPU,
+    init_on,
     nfan,
     glorot_uniform
 
@@ -12,6 +13,28 @@ struct GPU<:AbstractDevice end
 Array(::Type{CPU}) = Base.Array
 
 Array(::Type{GPU}) = CuArray
+
+"""
+    init_on()
+
+Can be overwritten to switch default initialization on which device.
+
+# Examples
+
+```julia
+julia> typeof(glorot_uniform(3, 3))
+Matrix{Float32} (alias for Array{Float32, 2})
+
+julia> Scapa.init_on() = GPU
+
+julia> typeof(glorot_uniform(3, 3))
+CuArray{Float32, 2, CUDA.Mem.DeviceBuffer}
+
+julia> typeof(glorot_uniform(CPU, Float64, 3, 3))
+Matrix{Float64} (alias for Array{Float64, 2})
+```
+"""
+init_on() = CPU
 
 if VERSION >= v"1.7"
     rng() = Random.default_rng()
@@ -45,6 +68,18 @@ function glorot_uniform(
     shift = extend_imag(T, 0.5)
 
     return (rand!(rng(device), out) .- shift) .* scale
+end
+
+function glorot_uniform(
+    T::Type{<:Number},
+    dims::Integer...;
+    gain::Real=1
+)
+    return glorot_uniform(init_on(), T, dims...; gain=gain)
+end
+
+function glorot_uniform(dims::Integer...; gain::Real=1)
+    return glorot_uniform(init_on(), Float32, dims...; gain=gain)
 end
 
 ChainRulesCore.@non_differentiable glorot_uniform(::Any...)
