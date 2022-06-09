@@ -11,10 +11,25 @@ end
 @testset "glorot uniform" begin
     for T in [Float32, Float64, ComplexF32, ComplexF64]
         @test glorot_uniform(CPU, T, 3, 3) isa Matrix{T}
+        @test glorot_uniform(T, 3, 3) isa Matrix{T}
+        @test glorot_uniform(3, 3) isa Matrix{Float32}
 
         if CUDA.functional()
             @test glorot_uniform(GPU, T, 3, 3) isa CuArray{T, 2}
         end
+    end
+end
+
+@testset "init_on" begin
+    if CUDA.functional()
+        @test glorot_uniform(Float32, 3, 3) isa Matrix{Float32}
+
+        Scapa.init_on() = GPU
+        @test glorot_uniform(Float32, 3, 3) isa CuArray{Float32, 2}
+        @test glorot_uniform(CPU, Float32, 3, 3) isa Matrix{Float32}
+
+        Scapa.init_on() = CPU
+        @test glorot_uniform(Float32, 3, 3) isa Matrix{Float32}
     end
 end
 
