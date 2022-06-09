@@ -9,4 +9,5 @@ using CUDA
 @testset "Scapa.jl" begin
     include("utils.jl")
     include("dense.jl")
+    include("model.jl")
 end
