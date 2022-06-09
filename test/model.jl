@@ -42,8 +42,8 @@ end
         ys = g(xs[1, :], xs[2, :])
 
         model = Model([
-            Dense(CPU, Float64, 2, 3, σ=NNlib.relu),
-            Dense(CPU, Float64, 3, 1, σ=NNlib.relu),
+            Dense(CPU, Float64, 2, 3, σ=Scapa.relu),
+            Dense(CPU, Float64, 3, 1, σ=Scapa.relu),
         ])
         ps = Params(params(model))
 
@@ -63,8 +63,8 @@ end
         ys = g(xs[1, :], xs[2, :])
 
         model = Model([
-            Dense(GPU, Float32, 2, 3, σ=NNlib.relu),
-            Dense(GPU, Float32, 3, 1, σ=NNlib.relu),
+            Dense(GPU, Float32, 2, 3, σ=Scapa.relu),
+            Dense(GPU, Float32, 3, 1, σ=Scapa.relu),
         ])
         ps = Params(params(model))
 
