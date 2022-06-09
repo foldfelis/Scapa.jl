@@ -31,6 +31,9 @@ nfan(out_dim, in_dim) = out_dim, in_dim # dense kernels
 
 # nfan(dims...) = # convolution kernels
 
+extend_imag(T::Type{<:Complex}, x::Real) = T(x + im*x)
+extend_imag(T::Type{<:Real}, x::Real) = T(x)
+
 function glorot_uniform(
     device::Type{<:AbstractDevice}, T::Type{<:Number},
     dims::Integer...;
@@ -39,8 +42,9 @@ function glorot_uniform(
     out = Array(device){T}(undef, dims...)
 
     scale = T(gain) * √(T(24) / sum(nfan(dims...)))
+    shift = extend_imag(T, 0.5)
 
-    return (rand!(rng(device), out) .- T(0.5)) .* scale
+    return (rand!(rng(device), out) .- shift) .* scale
 end
 
 ChainRulesCore.@non_differentiable glorot_uniform(::Any...)
