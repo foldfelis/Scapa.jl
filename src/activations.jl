@@ -17,7 +17,7 @@ end
 function gelu(x)
     α = oftf(x, 0.044715)
     λλ = oftf(x, gelu_2λ)
-    x * sigmoid(λλ * x * muladd(x^2, α, one(x)))
+    return x * sigmoid(λλ * x * muladd(x^2, α, one(x)))
 end
 
 gelu(z::Complex) = Complex(gelu(real(z)), gelu(imag(z)))
@@ -27,7 +27,7 @@ const gelu_2λ = √(8 / π)
 
 function σ(x)
     t = exp(-abs(x))
-    ifelse(x ≥ 0, inv(1 + t), t / (1 + t))
+    return ifelse(x ≥ 0, inv(1 + t), t / (1 + t))
 end
 
 σ(z::Complex) = Complex(σ(real(z)), σ(imag(z)))
