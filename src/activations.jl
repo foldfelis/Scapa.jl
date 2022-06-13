@@ -2,11 +2,7 @@ oftf(x, y) = oftype(float(x), y)
 
 relu(x) = ifelse(x<0, zero(x), x)  # faster than max(zero(x), x), still preserves NaN
 
-function relu(z::Complex)
-    re = relu(real(z))
-    im = relu(imag(z))
-    return Complex(re, im)
-end
+relu(z::Complex) = Complex(relu(real(z)), relu(imag(z)))
 
 leakyrelu(x, a=oftf(x, leakyrelu_a)) = ifelse(x>0, float(x), oftf(x, a*x))  # max(a*x, x) is 3x slower
 
@@ -17,3 +13,23 @@ function leakyrelu(z::Complex, a=oftf(real(z), leakyrelu_a))
     im = leakyrelu(imag(z), a)
     return Complex(re, im)
 end
+
+function gelu(x)
+    α = oftf(x, 0.044715)
+    λλ = oftf(x, gelu_2λ)
+    x * sigmoid(λλ * x * muladd(x^2, α, one(x)))
+end
+
+gelu(z::Complex) = Complex(gelu(real(z)), gelu(imag(z)))
+
+const gelu_λ = √(2 / π)
+const gelu_2λ = √(8 / π)
+
+function σ(x)
+    t = exp(-abs(x))
+    ifelse(x ≥ 0, inv(1 + t), t / (1 + t))
+end
+
+σ(z::Complex) = Complex(σ(real(z)), σ(imag(z)))
+
+const sigmoid = σ
